@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard financeiro Isabella maio junho 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600&family=Manrope:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-page: #F7F3ED;
+  --bg-card: #FFFFFF;
+  --bg-soft: #EFEAE0;
+  --text-primary: #2A2118;
+  --text-secondary: #6B6358;
+  --text-tertiary: #9A9286;
+  --border: rgba(42, 33, 24, 0.12);
+  --coral-bg: #FAECE7;
+  --coral-fg: #712B13;
+  --coral-strong: #B4543A;
+  --teal-bg: #E1F5EE;
+  --teal-fg: #085041;
+  --teal-strong: #1D9E75;
+  --green-bg: #EAF3DE;
+  --green-fg: #173404;
+  --green-strong: #639922;
+  --red-bg: #FCEBEB;
+  --red-fg: #501313;
+  --red-strong: #E24B4A;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg-page);
+  color: var(--text-primary);
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 24px 12px 48px;
+}
+.container { max-width: 880px; margin: 0 auto; }
+.header { margin-bottom: 24px; }
+.title {
+  font-family: 'Fraunces', serif;
+  font-weight: 500;
+  font-size: 32px;
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+}
+.subtitle { font-size: 14px; color: var(--text-secondary); }
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.tabs .calendar-wrapper {
+  grid-column: span 2;
+  margin-bottom: 0;
+  padding: 12px 14px;
+}
+.tabs .calendar-title {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.tabs .calendar { gap: 1px; }
+.tabs .cal-head { font-size: 9px; padding: 3px 0; }
+.tabs .cal-day { font-size: 11px; min-height: 30px; padding: 3px 1px; gap: 2px; }
+.tabs .cal-num.today { width: 19px; height: 19px; }
+.tabs .cal-mark { width: 4px; height: 4px; }
+.tabs .cal-marks { gap: 2px; height: 4px; }
+.tab {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tab:hover { background: var(--bg-soft); }
+.tab-label {
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.tab-subtitle {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.tab.coral.active {
+  background: var(--coral-bg);
+  border-color: var(--coral-strong);
+}
+.tab.coral.active .tab-label { color: var(--coral-fg); }
+.tab.coral.active .tab-subtitle { color: var(--coral-strong); }
+.tab.teal.active {
+  background: var(--teal-bg);
+  border-color: var(--teal-strong);
+}
+.tab.teal.active .tab-label { color: var(--teal-fg); }
+.tab.teal.active .tab-subtitle { color: var(--teal-strong); }
+.tab.neutral.active {
+  background: #F5EAC8;
+  border-color: #BA7517;
+}
+.tab.neutral.active .tab-label { color: #633806; }
+.tab.neutral.active .tab-subtitle { color: #BA7517; }
+.tab.danger.active {
+  background: var(--red-bg);
+  border-color: var(--red-strong);
+}
+.tab.danger.active .tab-label { color: var(--red-fg); }
+.tab.danger.active .tab-subtitle { color: var(--red-strong); }
+
+.week-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.week-tab {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.15s ease;
+}
+.week-tab:hover { background: var(--bg-soft); }
+.week-tab.active {
+  background: var(--text-primary);
+  color: var(--bg-page);
+  border-color: var(--text-primary);
+}
+.week-panel { display: none; }
+.week-panel.active { display: block; }
+
+.origin {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  margin-right: 8px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+.origin-pessoal { background: var(--coral-strong); }
+.origin-empresarial { background: var(--teal-strong); }
+
+.week-note {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-bottom: 10px;
+}
+.week-summary {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding-top: 12px;
+  margin-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.calendar-wrapper {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px 18px;
+  margin-bottom: 16px;
+}
+.calendar-title {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--coral-strong);
+  text-align: center;
+  letter-spacing: 0.06em;
+  margin-bottom: 18px;
+  text-transform: uppercase;
+}
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+.cal-head {
+  text-align: center;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  padding: 6px 0;
+  text-transform: uppercase;
+}
+.cal-day {
+  text-align: center;
+  padding: 6px 2px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--text-primary);
+  border-radius: 6px;
+  min-height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 3px;
+}
+.cal-day.empty { visibility: hidden; }
+.cal-day.holiday { color: var(--red-strong); font-style: italic; }
+.cal-num { line-height: 1.2; }
+.cal-num.today {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #D6D5CC;
+  color: var(--text-primary);
+  font-weight: 600;
+  position: relative;
+  z-index: 1;
+}
+.cal-marks { display: flex; gap: 3px; height: 5px; align-items: center; }
+.cal-mark {
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  display: inline-block;
+}
+.cal-mark.pessoal { background: var(--coral-strong); }
+.cal-mark.empresarial { background: var(--teal-strong); }
+.cal-legend {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  color: var(--text-secondary);
+  padding-top: 14px;
+  margin-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.cal-legend-item { display: flex; align-items: center; gap: 6px; }
+.cal-legend-item .cal-mark { margin: 0; }
+
+.week-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 14px 0 4px;
+  margin-top: 10px;
+  border-top: 1.5px solid var(--text-tertiary);
+  font-family: 'Manrope', sans-serif;
+  font-weight: 500;
+}
+.week-total-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+.week-total-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+.section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 16px;
+  margin-bottom: 16px;
+}
+.section.priority-pessoal {
+  background: var(--coral-bg);
+  border: 1.5px solid var(--coral-strong);
+}
+.section.priority-empresarial {
+  background: var(--teal-bg);
+  border: 1.5px solid var(--teal-strong);
+}
+.section.priority-pessoal .section-head,
+.section.priority-empresarial .section-head {
+  border-bottom-color: rgba(0,0,0,0.08);
+}
+.section.priority-pessoal .row,
+.section.priority-empresarial .row {
+  border-bottom-color: rgba(0,0,0,0.06);
+}
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.section-head-left { display: flex; align-items: center; gap: 12px; }
+.tag {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.tag-pessoal { background: var(--coral-bg); color: var(--coral-fg); }
+.tag-empresarial { background: var(--teal-bg); color: var(--teal-fg); }
+.section-title {
+  font-family: 'Fraunces', serif;
+  font-size: 20px;
+  font-weight: 500;
+}
+.section-total {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 16px;
+  font-weight: 500;
+}
+.month-label {
+  font-size: 11px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  margin: 18px 0 4px;
+}
+.month-label:first-of-type { margin-top: 0; }
+.row {
+  display: grid;
+  grid-template-columns: minmax(70px, auto) minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+}
+.row:last-child { border-bottom: none; }
+.row.no-badge { grid-template-columns: minmax(70px, auto) minmax(0, 1fr) auto; }
+.date { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--text-secondary); }
+.desc { color: var(--text-primary); }
+.desc small { display: block; color: var(--text-tertiary); font-size: 12px; margin-top: 3px; font-family: 'Manrope', sans-serif; }
+.value { font-family: 'JetBrains Mono', monospace; font-size: 13px; text-align: right; }
+.value.variable { color: var(--text-tertiary); font-style: italic; font-size: 12px; }
+.badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-align: center;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.badge-vencer { background: var(--bg-card); color: var(--text-secondary); border: 1px solid var(--border); }
+.badge-atraso { background: var(--red-strong); color: white; }
+.badge-curso { background: var(--bg-soft); color: var(--text-secondary); }
+.badge-pago { background: var(--green-bg); color: var(--green-fg); }
+.row.paid {
+  opacity: 1;
+  background: #EDECE6;
+  border-radius: 6px;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-left: -8px;
+  margin-right: -8px;
+  color: var(--text-tertiary);
+}
+.row.highlight {
+  background: #FFF9E6;
+  border-radius: 6px;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-left: -8px;
+  margin-right: -8px;
+}
+.row.paid .desc { color: var(--text-tertiary); }
+.row.paid .desc small { color: var(--text-tertiary); opacity: 0.85; }
+.row.paid .date { color: var(--text-tertiary); }
+.value.paid { text-decoration: line-through; color: var(--text-tertiary); }
+
+.totals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+.total-card {
+  background: var(--bg-soft);
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+.total-card.coral { background: var(--coral-bg); }
+.total-card.teal { background: var(--teal-bg); }
+.total-card.danger { background: var(--red-bg); }
+.total-label { font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; }
+.total-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 500;
+}
+
+.footnote {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  padding-top: 18px;
+  margin-top: 8px;
+}
+
+@media (max-width: 600px) {
+  .title { font-size: 26px; }
+  .row { gap: 10px; padding: 6px 0; }
+  .container { padding: 0; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1 class="title">Dashboard financeiro</h1>
+    <p class="subtitle">Visão de pendências e recorrências, atualizada em 16 de junho de 2026.</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab coral active" data-tab="pessoal-fixa">
+      <span class="tab-label">Despesas pessoais</span>
+      <span class="tab-subtitle">recorrentes mensais</span>
+    </button>
+    <button class="tab teal" data-tab="empresarial-fixa">
+      <span class="tab-label">Despesas empresariais</span>
+      <span class="tab-subtitle">recorrentes mensais</span>
+    </button>
+    <button class="tab danger" data-tab="em-atraso">
+      <span class="tab-label">Em atraso</span>
+      <span class="tab-subtitle">vencidas</span>
+    </button>
+    <button class="tab neutral" data-tab="por-semana">
+      <span class="tab-label">Despesas por semana</span>
+      <span class="tab-subtitle">junho de 2026</span>
+    </button>
+    <div class="calendar-wrapper">
+      <div class="calendar-title">Junho 2026</div>
+      <div class="calendar">
+        <div class="cal-head">D</div>
+        <div class="cal-head">S</div>
+        <div class="cal-head">T</div>
+        <div class="cal-head">Q</div>
+        <div class="cal-head">Q</div>
+        <div class="cal-head">S</div>
+        <div class="cal-head">S</div>
+
+        <div class="cal-day empty"></div>
+        <div class="cal-day"><span class="cal-num">01</span><span class="cal-marks"><span class="cal-mark empresarial"></span></span></div>
+        <div class="cal-day"><span class="cal-num">02</span><span class="cal-marks"></span></div>
+        <div class="cal-day"><span class="cal-num">03</span><span class="cal-marks"></span></div>
+        <div class="cal-day holiday"><span class="cal-num">04</span><span class="cal-marks"></span></div>
+        <div class="cal-day"><span class="cal-num">05</span><span class="cal-marks"><span class="cal-mark empresarial"></span><span class="cal-mark pessoal"></span></span></div>
+        <div class="cal-day"><span class="cal-num">06</span><span class="cal-marks"><span class="cal-mark pessoal"></span></span></div>
+
+        <div class="cal-day"><span class="cal-num">07</span><span class="cal-marks"></span></div>
+        <div class="cal-day"><span class="cal-num">08</span><span class="cal-marks"><span class="cal-mark empresarial"></span></span></div>
+        <div class="cal-day"><span class="cal-num">09</span><span class="cal-marks"></span></div>
+        <div class="cal-day"><span class="cal-num">10</span><span class="cal-marks"><span class="cal-mark empresarial"></span><span class="cal-mark pessoal"></span></span></div>
+        <div class="cal-day"><span class="cal-num">11</span><span class="cal-marks"></span></div>
+        <div class="cal-day"><span class="cal-num">12</span><span class="cal-marks"><span class="cal-mark empresarial"></span><span class="cal-mark pessoal"></span></span></div>
+        <div class="cal-day"><span class="cal-num">13</span><span class="cal-marks"><span class="cal-mark pessoal"></span></span></div>
+
+        <div class="cal-day"><span class="cal-num">14</span><span class="cal-marks"><span class="cal-mark empresarial"></span></span></div>
+        <div class="cal-day"><span class="cal-num">15</span><span class="cal-marks"><span class="cal-mark empresarial"></span><span class="cal-mark pessoal"></span></span></div>
+        <div class="cal-day"><span class="cal-num today">16</span><span class="cal-marks"><span class="cal-mark empresarial"></span></span></div>
+        <div class="cal-day"><span class="cal-num">17</span><span class="cal-marks"><span class="cal-mark empresarial"></span></span></div>
+        <div class="cal-day"><span class="cal-num">18</span><span class="cal-marks"><span class="cal-mark empresarial"></span></span></div>
+        <div class="cal-day"><span class="cal-num">19</span><span class="cal-marks"></span></div>
+        <div class="cal-day"><span class="cal-num">20</span><span class="cal-marks"><span class="cal-mark empresarial"></span><span class="cal-mark pessoal"></span></span></div>
+
+        <div class="cal-day"><span class="cal-num">21</span><span class="cal-marks"></span></div>
+        <div class="cal-day"><span class="cal-num">22</span><span class="cal-marks"></span></div>
+        <div class="cal-day"><span class="cal-num">23</span><span class="cal-marks"></span></div>
+        <div class="cal-day holiday"><span class="cal-num">24</span><span class="cal-marks"></span></div>
+        <div class="cal-day"><span class="cal-num">25</span><span class="cal-marks"><span class="cal-mark empresarial"></span><span class="cal-mark pessoal"></span></span></div>
+        <div class="cal-day"><span class="cal-num">26</span><span class="cal-marks"><span class="cal-mark empresarial"></span></span></div>
+        <div class="cal-day"><span class="cal-num">27</span><span class="cal-marks"><span class="cal-mark empresarial"></span></span></div>
+
+        <div class="cal-day"><span class="cal-num">28</span><span class="cal-marks"><span class="cal-mark empresarial"></span></span></div>
+        <div class="cal-day"><span class="cal-num">29</span><span class="cal-marks"></span></div>
+        <div class="cal-day"><span class="cal-num">30</span><span class="cal-marks"><span class="cal-mark empresarial"></span><span class="cal-mark pessoal"></span></span></div>
+        <div class="cal-day empty"></div>
+        <div class="cal-day empty"></div>
+        <div class="cal-day empty"></div>
+        <div class="cal-day empty"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="em-atraso" class="panel active">
+    <div class="section">
+      <div class="section-head">
+        <div class="section-head-left">
+          <span class="tag" style="background: var(--red-bg); color: var(--red-fg);">em atraso</span>
+          <div class="section-title">Despesas vencidas</div>
+        </div>
+        <div class="section-total" style="color: var(--red-fg);">R$ 6.578,00</div>
+      </div>
+
+      <div class="row"><span class="date">30/04 qui</span><span class="desc">BQ Aluguel de abril<small>Base R$ 2.750,00 mais multa de 10% (R$ 275,00) e mora de 9% ao mês, 47 dias de atraso (R$ 387,75)</small></span><span class="value">R$ 3.412,75</span><span class="badge badge-atraso">atraso</span></div>
+      <div class="row"><span class="date">30/05 sáb</span><span class="desc">BQ Aluguel de maio<small>Base R$ 2.750,00 mais multa de 10% (R$ 275,00) e mora de 9% ao mês, 17 dias de atraso (R$ 140,25)</small></span><span class="value">R$ 3.165,25</span><span class="badge badge-atraso">atraso</span></div>
+    </div>
+  </div>
+
+  <div id="pessoal-fixa" class="panel">
+    <div class="section priority-pessoal">
+      <div class="section-head">
+        <div class="section-head-left">
+          <span class="tag tag-pessoal">prioridade</span>
+          <div class="section-title">Prioridade de pagamento</div>
+        </div>
+        <div class="section-total" style="color: var(--coral-fg);">~ R$ 5.400,00</div>
+      </div>
+
+      <div class="row no-badge"><span class="date">Dia 25</span><span class="desc">Primazia</span><span class="value">R$ 1.500,00</span></div>
+      <div class="row no-badge"><span class="date">Dia 30</span><span class="desc">Aluguel pessoal</span><span class="value">R$ 3.500,00</span></div>
+      <div class="row no-badge"><span class="date">variável</span><span class="desc">Ração dos bebezinhos</span><span class="value variable">~ R$ 400,00</span></div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <div class="section-head-left">
+          <span class="tag tag-pessoal">pessoal</span>
+          <div class="section-title">Despesas pessoais recorrentes</div>
+        </div>
+        <div class="section-total" style="color: var(--coral-fg);">~ R$ 14.870,61</div>
+      </div>
+
+      <div class="row no-badge paid"><span class="date">Dia 2</span><span class="desc">Água</span><span class="value paid">~ R$ 100,00</span></div>
+      <div class="row no-badge paid"><span class="date">Dia 5</span><span class="desc">Cartão final 1218</span><span class="value paid">~ R$ 1.000,00</span></div>
+      <div class="row no-badge paid"><span class="date">Dia 6</span><span class="desc">Empréstimo Mercado Pago<small>Pago em junho de 2026, 4 parcelas restantes após esta</small></span><span class="value paid">R$ 775,49</span></div>
+      <div class="row no-badge highlight"><span class="date">Dia 10</span><span class="desc">Psiquiatra</span><span class="value">R$ 900,00</span></div>
+      <div class="row no-badge highlight"><span class="date">Dia 12</span><span class="desc">Cartão Mercado Pago 9505</span><span class="value">~ R$ 1.000,00</span></div>
+      <div class="row no-badge paid"><span class="date">Dia 13</span><span class="desc">Light<small>Valor médio, varia conforme consumo</small></span><span class="value paid">R$ 445,22</span></div>
+      <div class="row no-badge"><span class="date">Dia 15</span><span class="desc">Lia</span><span class="value">R$ 2.500,00</span></div>
+      <div class="row no-badge paid"><span class="date">Dia 15</span><span class="desc">Cartão final 9215</span><span class="value paid">~ R$ 1.000,00</span></div>
+      <div class="row no-badge"><span class="date">Dia 20</span><span class="desc">Psicóloga</span><span class="value">R$ 800,00</span></div>
+      <div class="row no-badge highlight"><span class="date">Dia 25</span><span class="desc">Primazia</span><span class="value">R$ 1.500,00</span></div>
+      <div class="row no-badge paid"><span class="date">25 a 31</span><span class="desc">Banho e tosa dos cachorros<small>Valor varia conforme o mês</small></span><span class="value paid">R$ 340,00</span></div>
+      <div class="row no-badge"><span class="date">25 a 31</span><span class="desc">Banho e tosa dos bebês<small>4 bebês a R$ 110,00 cada mais R$ 40,00</small></span><span class="value">R$ 480,00</span></div>
+      <div class="row no-badge"><span class="date">variável</span><span class="desc">Ração dos cachorros</span><span class="value variable">~ R$ 400,00</span></div>
+      <div class="row no-badge highlight"><span class="date">Dia 30</span><span class="desc">Oi</span><span class="value">R$ 129,90</span></div>
+      <div class="row no-badge highlight"><span class="date">Dia 30</span><span class="desc">Aluguel pessoal<small>Dia 12 quando atrasa</small></span><span class="value">R$ 3.500,00</span></div>
+    </div>
+  </div>
+
+  <div id="empresarial-fixa" class="panel">
+    <div class="section priority-empresarial">
+      <div class="section-head">
+        <div class="section-head-left">
+          <span class="tag tag-empresarial">prioridade</span>
+          <div class="section-title">Prioridade de pagamento</div>
+        </div>
+        <div class="section-total" style="color: var(--teal-fg);">R$ 4.383,29</div>
+      </div>
+
+      <div class="row no-badge"><span class="date">Dia 15</span><span class="desc">Acordo Julia Malito</span><span class="value">R$ 1.200,00</span></div>
+      <div class="row no-badge"><span class="date">Dia 20</span><span class="desc">FGTS folha</span><span class="value">R$ 808,29</span></div>
+      <div class="row no-badge"><span class="date">Dia 25</span><span class="desc">Acordo Lucas Pereira</span><span class="value">R$ 1.250,00</span></div>
+      <div class="row no-badge"><span class="date">Dia 25</span><span class="desc">Acordo Fernanda Freitas</span><span class="value">R$ 1.125,00</span></div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <div class="section-head-left">
+          <span class="tag tag-empresarial">empresarial</span>
+          <div class="section-title">Despesas empresariais recorrentes</div>
+        </div>
+        <div class="section-total" style="color: var(--teal-fg);">~ R$ 24.185,52</div>
+      </div>
+
+      <div class="row no-badge paid"><span class="date">Dia 1</span><span class="desc">Google Workspace<small>adm@isabellafortunato.com, varia entre R$ 800,00 e R$ 960,00 (junho ficou em R$ 953,77)</small></span><span class="value paid">~ R$ 900,00</span></div>
+      <div class="row no-badge paid"><span class="date">Dia 1</span><span class="desc">Google Workspace<small>isabella@fortunetreinamentos.com.br, varia entre R$ 250,00 e R$ 420,00 (junho ficou em R$ 417,79)</small></span><span class="value paid">~ R$ 350,00</span></div>
+      <div class="row no-badge paid"><span class="date">Dia 5</span><span class="desc">Quintino, contabilidade</span><span class="value paid">R$ 850,00</span></div>
+      <div class="row no-badge paid"><span class="date">Dia 5</span><span class="desc">Claude</span><span class="value paid">R$ 550,00</span></div>
+      <div class="row no-badge paid"><span class="date">5º útil</span><span class="desc">Folha Luna<small>Líquido sem hora extra</small></span><span class="value paid">R$ 1.599,43</span></div>
+      <div class="row no-badge paid"><span class="date">5º útil</span><span class="desc">Folha Gabrielly<small>Líquido sem hora extra</small></span><span class="value paid">R$ 2.229,32</span></div>
+      <div class="row no-badge"><span class="date">Dia 10</span><span class="desc">Drummond Advogadas, mensal</span><span class="value">R$ 2.593,60</span></div>
+      <div class="row no-badge paid"><span class="date">Dia 10</span><span class="desc">Itaú<small>Pago em 10/06/2026</small></span><span class="value paid">R$ 2.635,37</span></div>
+      <div class="row no-badge paid"><span class="date">Dia 12</span><span class="desc">Ponto Mais<small>Controle de ponto das funcionárias, pago em junho de 2026</small></span><span class="value paid">R$ 59,90</span></div>
+      <div class="row no-badge"><span class="date">Dia 14</span><span class="desc">Perplexity<small>12 parcelas mensais, primeira em junho de 2026 e última em maio de 2027</small></span><span class="value">R$ 90,00</span></div>
+      <div class="row no-badge"><span class="date">Dia 15</span><span class="desc">Acordo Julia Malito<small>Parcela 1 de 2, última em 15/07/2026</small></span><span class="value">R$ 1.200,00</span></div>
+      <div class="row no-badge"><span class="date">Dia 16</span><span class="desc">Acordo Quintino</span><span class="value">R$ 1.000,00</span></div>
+      <div class="row no-badge paid"><span class="date">Dia 17</span><span class="desc">Vivo<small>Pago em 15/06/2026</small></span><span class="value paid">R$ 1.369,81</span></div>
+      <div class="row no-badge paid"><span class="date">Dia 18</span><span class="desc">Google One<small>Pago em junho de 2026</small></span><span class="value paid">R$ 389,00</span></div>
+      <div class="row no-badge highlight"><span class="date">Dia 20</span><span class="desc">FGTS folha<small>Valor aproximado, depende da folha</small></span><span class="value">R$ 808,29</span></div>
+      <div class="row no-badge highlight"><span class="date">Dia 25</span><span class="desc">Segdir</span><span class="value">R$ 170,00</span></div>
+      <div class="row no-badge highlight"><span class="date">Dia 25</span><span class="desc">Acordo Lucas Pereira<small>Até janeiro de 2028, 20 parcelas</small></span><span class="value">R$ 1.250,00</span></div>
+      <div class="row no-badge highlight"><span class="date">Dia 25</span><span class="desc">Acordo Fernanda Freitas<small>Parcela 1 de 8, primeira em 25/06/2026, última em 25/01/2027</small></span><span class="value">R$ 1.125,00</span></div>
+      <div class="row no-badge"><span class="date">Dia 26</span><span class="desc">Manus</span><span class="value">R$ 109,00</span></div>
+      <div class="row no-badge highlight"><span class="date">Dia 27</span><span class="desc">iFood (vale-alimentação)<small>R$ 20,00 por dia útil por funcionária, referente ao mês seguinte</small></span><span class="value variable">~ R$ 820 a 920</span></div>
+      <div class="row no-badge highlight"><span class="date">Dia 27</span><span class="desc">Mabrime</span><span class="value">R$ 680,00</span></div>
+      <div class="row no-badge highlight"><span class="date">Dia 27</span><span class="desc">Riocard, Gabrielly<small>R$ 15,80 por dia útil, referente ao mês seguinte</small></span><span class="value variable">~ R$ 332 a 363</span></div>
+      <div class="row no-badge highlight"><span class="date">Dia 28</span><span class="desc">Omie</span><span class="value">R$ 325,00</span></div>
+      <div class="row no-badge"><span class="date">Dia 30</span><span class="desc">BQ Aluguel<small>10% de multa mais R$ 8,25 por dia se atrasar</small></span><span class="value">R$ 2.750,00</span></div>
+    </div>
+  </div>
+
+  <div id="por-semana" class="panel">
+    <div class="section">
+      <div class="section-head">
+        <div class="section-head-left">
+          <div class="section-title">Despesas por semana, junho de 2026</div>
+        </div>
+      </div>
+      <p class="week-note">A divisão segue de segunda a domingo. Itens em cinza já foram pagos. Bolinha coral indica despesa pessoal e bolinha teal indica empresarial.</p>
+
+      <div class="week-tabs">
+        <button class="week-tab active" data-week="semana-1">Semana 1</button>
+        <button class="week-tab" data-week="semana-2">Semana 2</button>
+        <button class="week-tab" data-week="semana-3">Semana 3</button>
+        <button class="week-tab" data-week="semana-4">Semana 4</button>
+      </div>
+
+      <div id="semana-1" class="week-panel active">
+        <div class="month-label">1 a 7 de junho</div>
+        <div class="row paid"><span class="date">01/06 dom</span><span class="desc"><span class="origin origin-empresarial"></span>Google Workspace<small>adm@isabellafortunato.com</small></span><span class="value paid">R$ 953,77</span><span class="badge badge-pago">pago</span></div>
+        <div class="row paid"><span class="date">01/06 dom</span><span class="desc"><span class="origin origin-empresarial"></span>Google Workspace<small>isabella@fortunetreinamentos.com.br</small></span><span class="value paid">R$ 417,79</span><span class="badge badge-pago">pago</span></div>
+        <div class="row paid"><span class="date">05/06 sex</span><span class="desc"><span class="origin origin-pessoal"></span>Cartão final 1218<small>Quitado antecipadamente no final de maio</small></span><span class="value paid">R$ 0,00</span><span class="badge badge-pago">pago</span></div>
+        <div class="row paid"><span class="date">05/06 sex</span><span class="desc"><span class="origin origin-empresarial"></span>FGTS Fernanda</span><span class="value paid">R$ 3.185,96</span><span class="badge badge-pago">pago</span></div>
+        <div class="row paid"><span class="date">05/06 sex</span><span class="desc"><span class="origin origin-empresarial"></span>Quintino</span><span class="value paid">R$ 850,00</span><span class="badge badge-pago">pago</span></div>
+        <div class="row paid"><span class="date">05/06 sex</span><span class="desc"><span class="origin origin-empresarial"></span>Claude</span><span class="value paid">R$ 550,00</span><span class="badge badge-pago">pago</span></div>
+        <div class="row paid"><span class="date">06/06 sáb</span><span class="desc"><span class="origin origin-pessoal"></span>Empréstimo Mercado Pago<small>Pago em 07/06/2026 com juros</small></span><span class="value paid">R$ 802,48</span><span class="badge badge-pago">pago</span></div>
+        <div class="week-total"><span class="week-total-label">Total pendente da semana</span><span class="week-total-value">R$ 0,00</span></div>
+      </div>
+
+      <div id="semana-2" class="week-panel">
+        <div class="month-label">8 a 14 de junho</div>
+        <div class="row paid"><span class="date">08/06 seg</span><span class="desc"><span class="origin origin-empresarial"></span>Folha Luna</span><span class="value paid">R$ 1.599,43</span><span class="badge badge-pago">pago</span></div>
+        <div class="row paid"><span class="date">08/06 seg</span><span class="desc"><span class="origin origin-empresarial"></span>Folha Gabrielly<small>Com hora extra do mês conforme holerite</small></span><span class="value paid">R$ 2.295,30</span><span class="badge badge-pago">pago</span></div>
+        <div class="row"><span class="date">08/06 seg</span><span class="desc"><span class="origin origin-empresarial"></span>Folha Fernanda saldo de salário</span><span class="value">R$ 870,00</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row"><span class="date">10/06 qua</span><span class="desc"><span class="origin origin-empresarial"></span>Drummond Advogadas, mensal</span><span class="value">R$ 2.593,60</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row paid"><span class="date">10/06 qua</span><span class="desc"><span class="origin origin-empresarial"></span>Itaú</span><span class="value paid">R$ 2.635,37</span><span class="badge badge-pago">pago</span></div>
+        <div class="row"><span class="date">10/06 qua</span><span class="desc"><span class="origin origin-pessoal"></span>Psiquiatra</span><span class="value">R$ 900,00</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row"><span class="date">12/06 sex</span><span class="desc"><span class="origin origin-pessoal"></span>Cartão Mercado Pago 9505</span><span class="value">R$ 1.118,29</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row paid"><span class="date">12/06 sex</span><span class="desc"><span class="origin origin-empresarial"></span>Ponto Mais</span><span class="value paid">R$ 59,90</span><span class="badge badge-pago">pago</span></div>
+        <div class="row paid"><span class="date">13/06 sáb</span><span class="desc"><span class="origin origin-pessoal"></span>Light</span><span class="value paid">R$ 445,22</span><span class="badge badge-pago">pago</span></div>
+        <div class="row"><span class="date">14/06 dom</span><span class="desc"><span class="origin origin-empresarial"></span>Perplexity<small>Parcela 1 de 12</small></span><span class="value">R$ 90,00</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="week-total"><span class="week-total-label">Total pendente da semana</span><span class="week-total-value">R$ 5.571,89</span></div>
+      </div>
+
+      <div id="semana-3" class="week-panel">
+        <div class="month-label">15 a 21 de junho</div>
+        <div class="row paid"><span class="date">15/06 seg</span><span class="desc"><span class="origin origin-pessoal"></span>Cartão final 9215</span><span class="value paid">R$ 342,44</span><span class="badge badge-pago">pago</span></div>
+        <div class="row"><span class="date">15/06 seg</span><span class="desc"><span class="origin origin-pessoal"></span>Lia</span><span class="value">R$ 2.500,00</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row"><span class="date">15/06 seg</span><span class="desc"><span class="origin origin-empresarial"></span>Acordo Julia Malito</span><span class="value">R$ 1.200,00</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row"><span class="date">16/06 ter</span><span class="desc"><span class="origin origin-empresarial"></span>Acordo Quintino</span><span class="value">R$ 1.000,00</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row paid"><span class="date">17/06 qua</span><span class="desc"><span class="origin origin-empresarial"></span>Vivo</span><span class="value paid">R$ 1.369,81</span><span class="badge badge-pago">pago</span></div>
+        <div class="row paid"><span class="date">18/06 qui</span><span class="desc"><span class="origin origin-empresarial"></span>Google One</span><span class="value paid">R$ 389,00</span><span class="badge badge-pago">pago</span></div>
+        <div class="row"><span class="date">20/06 sáb</span><span class="desc"><span class="origin origin-empresarial"></span>FGTS folha de maio</span><span class="value">R$ 808,29</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row"><span class="date">20/06 sáb</span><span class="desc"><span class="origin origin-pessoal"></span>Psicóloga</span><span class="value">R$ 800,00</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="week-total"><span class="week-total-label">Total pendente da semana</span><span class="week-total-value">R$ 6.308,29</span></div>
+      </div>
+
+      <div id="semana-4" class="week-panel">
+        <div class="month-label">22 a 30 de junho</div>
+        <div class="row"><span class="date">25/06 qui</span><span class="desc"><span class="origin origin-empresarial"></span>Segdir</span><span class="value">R$ 170,00</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row"><span class="date">25/06 qui</span><span class="desc"><span class="origin origin-empresarial"></span>Acordo Lucas Pereira</span><span class="value">R$ 1.250,00</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row"><span class="date">25/06 qui</span><span class="desc"><span class="origin origin-empresarial"></span>Acordo Fernanda Freitas</span><span class="value">R$ 1.125,00</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row"><span class="date">25/06 qui</span><span class="desc"><span class="origin origin-pessoal"></span>Primazia</span><span class="value">R$ 1.500,00</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row paid"><span class="date">25 a 30</span><span class="desc"><span class="origin origin-pessoal"></span>Banho e tosa dos cachorros</span><span class="value paid">R$ 340,00</span><span class="badge badge-pago">pago</span></div>
+        <div class="row"><span class="date">25 a 30</span><span class="desc"><span class="origin origin-pessoal"></span>Banho e tosa dos bebês<small>4 bebês a R$ 110,00 cada mais R$ 40,00</small></span><span class="value">R$ 480,00</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row"><span class="date">26/06 sex</span><span class="desc"><span class="origin origin-empresarial"></span>Manus</span><span class="value">R$ 109,00</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row"><span class="date">27/06 sáb</span><span class="desc"><span class="origin origin-empresarial"></span>iFood (vale-alimentação)</span><span class="value">R$ 920,00</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row"><span class="date">27/06 sáb</span><span class="desc"><span class="origin origin-empresarial"></span>Mabrime</span><span class="value">R$ 680,00</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row"><span class="date">27/06 sáb</span><span class="desc"><span class="origin origin-empresarial"></span>Riocard</span><span class="value">R$ 363,40</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row"><span class="date">28/06 dom</span><span class="desc"><span class="origin origin-empresarial"></span>Omie</span><span class="value">R$ 325,00</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row"><span class="date">30/06 ter</span><span class="desc"><span class="origin origin-empresarial"></span>BQ Aluguel de junho</span><span class="value">R$ 2.750,00</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row"><span class="date">30/06 ter</span><span class="desc"><span class="origin origin-pessoal"></span>Oi</span><span class="value">R$ 129,90</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="row"><span class="date">30/06 ter</span><span class="desc"><span class="origin origin-pessoal"></span>Aluguel pessoal</span><span class="value">R$ 3.500,00</span><span class="badge badge-vencer">a vencer</span></div>
+        <div class="week-total"><span class="week-total-label">Total pendente da semana</span><span class="week-total-value">R$ 13.302,30</span></div>
+      </div>
+
+      <div class="week-summary">
+        <span><span class="origin origin-pessoal"></span>pessoal</span>
+        <span><span class="origin origin-empresarial"></span>empresarial</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="totals">
+    <div class="total-card coral">
+      <div class="total-label">Pessoal por mês</div>
+      <div class="total-value" style="color: var(--coral-fg);">~ R$ 14.870,61</div>
+    </div>
+    <div class="total-card teal">
+      <div class="total-label">Empresarial por mês</div>
+      <div class="total-value" style="color: var(--teal-fg);">~ R$ 24.185,52</div>
+    </div>
+    <div class="total-card danger">
+      <div class="total-label">Em atraso</div>
+      <div class="total-value" style="color: var(--red-fg);">R$ 6.578,00</div>
+    </div>
+  </div>
+
+  <p class="footnote">As despesas recorrentes mensais somam aproximadamente R$ 14.870,61 no pessoal (já incluindo estimativas de água, três cartões e ração) e R$ 24.185,52 no empresarial (com média estimada dos dois Google Workspace). Os dois BQ Aluguel em atraso seguem subindo R$ 8,25 por dia cada um até serem pagos. Os acordos Fernanda Freitas e Lucas Pereira têm prazo definido, terminando em janeiro de 2027 e janeiro de 2028 respectivamente.</p>
+
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.tab');
+  const panels = document.querySelectorAll('.panel');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      tabs.forEach(t => t.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(target).classList.add('active');
+    });
+  });
+
+  const weekTabs = document.querySelectorAll('.week-tab');
+  const weekPanels = document.querySelectorAll('.week-panel');
+  weekTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.week;
+      weekTabs.forEach(t => t.classList.remove('active'));
+      weekPanels.forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(target).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
